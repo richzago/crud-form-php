@@ -6,16 +6,79 @@ class User extends Conn
     public array $formData;
     public int $id;
 
-    public function list(): array
-    {
-        $this->conn = $this->connectDb();
-        $query_users = "SELECT id, name, email FROM users ORDER BY id ASC LIMIT 20";
-        $result_users = $this->conn->prepare($query_users);
-        $result_users->execute();
-        $array_result = $result_users->fetchAll();
-        
-        return $array_result;
+ 
+public function list(
+    string $search = '',
+    int $limit = 5,
+    int $offset = 0
+): array {
+
+    // Conectar ao banco de dados
+    $this->conn = $this->connectDb();
+
+    // Consulta inicial
+    $sql = "SELECT id, name, email FROM users";
+
+    // Adicionar filtro somente quando houver pesquisa
+    if ($search !== '') {
+        $sql .= " WHERE name LIKE :name OR email LIKE :email";
     }
+
+    // Ordenar e limitar os resultados
+    $sql .= " ORDER BY id ASC LIMIT :limit OFFSET :offset";
+
+    // Preparar a consulta
+    $stmt = $this->conn->prepare($sql);
+
+    // Enviar o termo pesquisado com segurança
+    if ($search !== '') {
+        $term = "%{$search}%";
+
+        $stmt->bindValue(':name', $term, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $term, PDO::PARAM_STR);
+    }
+
+    // Informar quantos registros buscar e de onde começar
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+    // Executar a consulta
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+}
+
+
+public function countUsers(string $search = ''): int
+{
+    // Conectar ao banco
+    $this->conn = $this->connectDb();
+
+    // Contar todos os usuários
+    $sql = "SELECT COUNT(*) FROM users";
+
+    // Se houver pesquisa, contar somente os resultados filtrados
+    if ($search !== '') {
+        $sql .= " WHERE name LIKE :name OR email LIKE :email";
+    }
+
+    $stmt = $this->conn->prepare($sql);
+
+    // Aplicar o mesmo filtro usado na listagem
+    if ($search !== '') {
+        $term = "%{$search}%";
+
+        $stmt->bindValue(':name', $term, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $term, PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+
+    // fetchColumn() recupera o resultado do COUNT(*)
+    return (int) $stmt->fetchColumn();
+}
+
+
 
     public function create(): bool
     {

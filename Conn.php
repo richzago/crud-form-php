@@ -29,18 +29,32 @@ abstract class Conn
 
     public function connectDb()
     {
-        try{
-            //Conexao com a porta
-            //$this->connect = new PDO($this->db . ':host=' . $this->host . ';port=' . $this->port . ';dbname='. $this->dbname, $this->user, $this->pass);
-            
-            //Conexao sem a porta
-            $this->connect = new PDO($this->db . ':host=' . $this->host . ';dbname='. $this->dbname, $this->user, $this->pass);
-            
-            //echo "Conexão com banco de dados realizado com sucesso!<br>";
-            return $this->connect;
-        }catch (Exception $err){
-            //die('Erro: Por favor tente novamente. Caso o problema persista, entre em contato o administrador adm@empresa.com');
-            echo "Erro: Conexão com banco de dados não realizado com sucesso! Erro gerado: " . $err->getMessage();
-        }
+       
+try {
+    $dsn = "{$this->db}:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4";
+
+    $this->connect = new PDO(
+        $dsn,
+        $this->user,
+        $this->pass,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]
+    );
+
+    return $this->connect;
+
+} catch (PDOException $err) {
+
+    error_log("Erro de conexão PDO: " . $err->getMessage());
+
+    throw new RuntimeException(
+        "Não foi possível conectar ao banco de dados.",
+        0,
+        $err
+    );
+}
+
     }
 }

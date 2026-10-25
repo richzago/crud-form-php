@@ -1,38 +1,53 @@
+
 <?php
 
 session_start();
-ob_start();
-//Receber o id da URL
-$id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
 
-//Verificar se o ID possui valor
-if(!empty($id)) {
-   //Incluir os arquivos
-    require "./Conn.php";
-    require "./User.php";
+// 1. Receber o ID enviado pelo formulário POST
+$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
-    //Instanciar a classe e criar o objeto
-    $deleteUser = new User();
+// 2. Receber o token de segurança
+$token = $_POST['csrf_token'] ?? '';
 
-    //Enviar o id para o atributo da classe
-    $deleteUser->id = $id;
-
-    //Instanciar o método apagar
-    $value = $deleteUser->delete();
-
-    if($value){
-        $_SESSION["msg"] =  "<p style='color: 
-        #7FFF00;'>Usuário apagado com sucesso!</p>";
-        header("Location: index.php");
-    }else{
-        $_SESSION["msg"] =  "<p style='color: 
-        #f00;'>Erro: Ocorreu um erro ao tentar deletar o usuário!</p>";
-        header("Location: index.php");
-    }
-
-}else{
-    $_SESSION["msg"] =  "<p style='color: 
-    #f00;'>Erro: Usuário não encontrado!</p>";
-            header("Location: index.php");
+// 3. Verificar se a requisição é POST e se o token é válido
+if (
+    $_SERVER['REQUEST_METHOD'] !== 'POST' ||
+    empty($_SESSION['csrf_token']) ||
+    !is_string($token) ||
+    !hash_equals($_SESSION['csrf_token'], $token)
+) {
+    http_response_code(403);
+    exit('Operação não autorizada.');
 }
 
+// 4. Verificar se o ID é válido
+if (!$id || $id < 1) {
+    $_SESSION['msg'] = "<p style='color: red;'>ID inválido!</p>";
+
+    header("Location: index.php");
+    exit;
+}
+
+// 5. Incluir os arquivos necessários
+require "./Conn.php";
+require "./User.php";
+
+// 6. Instanciar a classe User
+$deleteUser = new User();
+
+// 7. Definir o ID do usuário que será excluído
+$deleteUser->id = $id;
+
+// 8. Executar a exclusão
+$value = $deleteUser->delete();
+
+// 9. Verificar o resultado
+if ($value) {
+    $_SESSION['msg'] = "<p style='color: green;'>Usuário apagado com sucesso!</p>";
+} else {
+    $_SESSION['msg'] = "<p style='color: red;'>Usuário não encontrado!</p>";
+}
+
+// 10. Redirecionar para a listagem
+header("Location: index.php");
+exit;

@@ -1,63 +1,94 @@
+
 <?php
- session_start();
 
- ob_start();
+session_start();
 
- $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+// Receber e validar o ID enviado pela URL
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+// Caso o ID seja inválido, voltar para a listagem
+if (!$id || $id < 1) {
+    $_SESSION['msg'] = "<p class='message error'>ID inválido!</p>";
+
+    header("Location: index.php");
+    exit;
+}
+
+// Incluir os arquivos
+require "./Conn.php";
+require "./User.php";
+
+// Buscar o usuário no banco
+$viewUser = new User();
+$viewUser->id = $id;
+$valueUser = $viewUser->view();
+
+// Verificar se encontrou o usuário
+if (!$valueUser) {
+    $_SESSION['msg'] = "<p class='message error'>Usuário não encontrado!</p>";
+
+    header("Location: index.php");
+    exit;
+}
+
+// Receber os dados
+$name = htmlspecialchars($valueUser['name'], ENT_QUOTES, 'UTF-8');
+$email = htmlspecialchars($valueUser['email'], ENT_QUOTES, 'UTF-8');
+
+// Formatar a data de cadastro
+$createdAt = date('d/m/Y H:i:s', strtotime($valueUser['createdAt']));
+
+// Verificar se existe uma data de atualização
+if (!empty($valueUser['updatedAt'])) {
+    $updatedAt = date('d/m/Y H:i:s', strtotime($valueUser['updatedAt']));
+} else {
+    $updatedAt = 'Sem atualização';
+}
+
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <title>Visualizar Herança Mysql</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Visualizar Usuário | CRUD PHP</title>
 </head>
-<nav>
-    <a href="index.php">Listar</a><br>
-    <a href="create.php">Cadastrar</a><br>
-</nav>
 <body>
+
+    <!-- Menu -->
+    <nav>
+        <a href="index.php">Listar</a>
+        <a href="create.php">Cadastrar</a>
+    </nav>
+
     <h1>Detalhes do Usuário</h1>
 
-    
-    <?php
-    
-    if(isset($_SESSION["msg"])){
-        echo $_SESSION["msg"];
-        unset($_SESSION["msg"]);
-    }
+    <!-- Card com os dados do usuário -->
+    <div class="user-info-view">
 
-    if(!empty($id)){
-        require "./Conn.php";
-        require "./User.php";
+        <p><strong>ID:</strong> <?= $id ?></p>
 
-        $viewUser = new User();
-        $viewUser->id = $id;
-        $valueUser = $viewUser->view();
-        extract($valueUser);
+        <p><strong>Nome:</strong> <?= $name ?></p>
 
-        echo "<div class='user-info-view'>";
-        echo "<p>ID: $id </p>";
-        echo "<p>Nome: $name </p>";
-        echo "<p>E-mail: $email </p>";
-        echo "<p>Usuário criado em: " . date("d/m/Y H:i:s </p> " ,
-        strtotime($createdAt))."<br>";
+        <p><strong>E-mail:</strong> <?= $email ?></p>
 
-        echo "Última atualização: ";
-        if(!empty($updatedAt)){
-            echo date("d/m/Y H:i:s",
-            strtotime($updatedAt));
-        }else{
-            echo "Sem atualização";
-        }
-        echo "</div>";
-    
-    }else{
-        $_SESSION['msg'] =  "<p style='color: #f00;'>Usuário não encontrado!</p>";
-        header("Location: index.php");
-    }
+        <p><strong>Usuário criado em:</strong> <?= $createdAt ?></p>
 
-    ?>
+        <p><strong>Última atualização:</strong> <?= $updatedAt ?></p>
+
+        <a class="a-user-info" href="edit.php?id=<?= $id ?>">
+            Editar usuário
+        </a>
+
+        <a class="a-user-info" href="index.php">
+            Voltar para listagem
+        </a>
+
+    </div>
 
 </body>
 </html>

@@ -1,128 +1,369 @@
-body {
-  background-color: black;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
+/* ==========================================
+   CONFIGURAÇÕES GERAIS
+========================================== */
+
+* {
+  box-sizing: border-box;
 }
+
+body {
+  background-color: #111827;
+  color: #f9fafb;
+  font-family: Arial, sans-serif;
+
+  margin: 0;
+  padding: 30px 20px;
+  min-height: 100vh;
+}
+
+h1 {
+  color: white;
+  font-size: 28px;
+  text-align: center;
+  margin: 25px 0;
+}
+
+p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+a {
+  color: #e5e7eb;
+}
+
+/* ==========================================
+   MENU DE NAVEGAÇÃO
+========================================== */
 
 nav {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 25px;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  min-height: 150px;
-  min-width: 200px;
-
-  color: #fff;
-  background-color: #222;
-  border-radius: 10px;
-
-  padding: 20px;
-}
-
-.input {
-  background-color: #6c757d;
-  color: #fff;
-  border: none;
-  padding: 5px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-  margin-top: 10px;
-}
-
-.input-edit:hover {
-  background-color: #c9b37e;
-}
-
+nav a,
 .a-header {
-  font-size: 20px;
+  display: inline-block;
+  padding: 10px 16px;
+
+  background-color: #1f2937;
+  color: #e5e7eb;
+
+  border-radius: 8px;
   text-decoration: none;
-  color: blue;
-  border-radius: 5px;
-  margin-right: 10px;
-  list-style-type: disc;
-  padding-left: 10px;
+  font-size: 14px;
 }
 
+nav a:hover,
 .a-header:hover {
-  background-color: blue;
-  color: #f2f2f2;
+  background-color: #374151;
+  color: white;
 }
+
+/* ==========================================
+   GRID DE USUÁRIOS
+========================================== */
+
+.users-grid {
+  display: grid;
+
+  /* Três cards por linha */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 20px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 20px auto;
+}
+
+/* ==========================================
+   CARDS DOS USUÁRIOS
+========================================== */
 
 .user-info {
   display: flex;
   flex-direction: column;
 
-  background-color: #222;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
-  margin-bottom: 20px;
+  min-width: 0;
 
   color: white;
-  font-size: 18px;
-  line-height: 1.5;
+}
+
+/* Informações do usuário */
+.user-info p {
+  margin: 6px 0;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+/* Botões Visualizar e Editar */
+.a-user-info {
+  display: block;
+  width: 100%;
+
+  background-color: #374151;
+  color: white;
+
+  padding: 10px;
+  margin-top: 8px;
+
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.a-user-info:hover {
+  background-color: #4b5563;
+}
+
+/* Formulário de exclusão */
+.user-info form {
+  margin-top: 8px;
+}
+
+/* Botão Apagar */
+.user-info button {
+  width: 100%;
+
+  background-color: #7f1d1d;
+  color: white;
+
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.user-info button:hover {
+  background-color: #991b1b;
+}
+
+/* ==========================================
+   FORMULÁRIOS DE CADASTRO E EDIÇÃO
+========================================== */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  width: 100%;
+  max-width: 430px;
+  margin: 20px auto;
+  padding: 25px;
+
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+}
+
+.form label {
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+.form input[type="text"],
+.form input[type="email"] {
+  width: 100%;
+  padding: 11px;
+
+  background-color: #111827;
+  color: white;
+
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+}
+
+.form input:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+/* Botão cadastrar e editar */
+.form .input {
+  width: 100%;
+
+  background-color: #2563eb;
+  color: white;
+
+  padding: 12px;
+  margin-top: 10px;
+
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form .input:hover {
+  background-color: #1d4ed8;
+}
+
+/* ==========================================
+   FORMULÁRIO DE PESQUISA
+========================================== */
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 10px;
+  margin: 20px auto;
+}
+
+.search-form input {
+  width: 100%;
+  max-width: 350px;
+
+  padding: 11px;
+
+  background-color: #1f2937;
+  color: white;
+
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+}
+
+.search-form button {
+  background-color: #2563eb;
+  color: white;
+
+  padding: 11px 16px;
+  border: none;
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background-color: #1d4ed8;
+}
+
+.search-form a {
+  padding: 11px;
+  text-decoration: none;
+}
+
+/* ==========================================
+   PAGINAÇÃO
+========================================== */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 15px;
+  margin: 25px auto;
+}
+
+.pagination a {
+  background-color: #374151;
+  color: white;
+
+  padding: 10px 15px;
+
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.pagination a:hover {
+  background-color: #4b5563;
+}
+
+/* ==========================================
+   MENSAGENS
+========================================== */
+
+.message {
+  width: fit-content;
+  max-width: 100%;
+
+  padding: 12px 18px;
+  margin: 15px auto;
+
+  color: white;
+  border-radius: 8px;
+
   text-align: center;
 }
+
+/* Sucesso */
+.message.success {
+  background-color: #216e39;
+}
+
+/* Erro */
+.message.error {
+  background-color: #8b3030;
+}
+
+/* ==========================================
+   PÁGINA DE VISUALIZAÇÃO
+========================================== */
 
 .user-info-view {
   display: flex;
   flex-direction: column;
 
-  min-height: 180px;
-
-  background-color: #222;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
-  margin-bottom: 20px;
-
-  color: white;
-  font-size: 18px;
-  line-height: 1.5;
-  text-align: center;
-  align-items: flex-start;
-}
-
-.a-user-info {
-  display: flex;
-  justify-content: center;
-}
-
-h1 {
-  color: white;
-  display: flex;
-  justify-content: center;
-}
-
-label {
-  color: white;
-}
-
-a {
-  color: white;
-}
-
-p {
-  color: white;
-
-  height: 0px;
-}
-
-hr {
-  border-style: solid;
-  border-color: #555;
-  border-width: 0 0 3px 0;
   width: 100%;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  max-width: 500px;
+
+  margin: 20px auto;
+  padding: 25px;
+
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+}
+
+.user-info-view p {
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   RESPONSIVIDADE
+========================================== */
+
+/* Tablets: dois cards por linha */
+@media (max-width: 900px) {
+  .users-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Celulares: um card por linha */
+@media (max-width: 600px) {
+  body {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+
+  .users-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .user-info {
+    padding: 18px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+  }
 }
