@@ -68,13 +68,13 @@
                 <label>Nome: </label>
                 <input type="text" name="name" 
                 placeholder="Nome Completo" 
-                value="<?php echo $name;?>"
+                value="<?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>"
                 required /> 
 
                 <label>Email: </label>
                 <input type="email" name="email" 
                 placeholder="E-mail" 
-                value="<?php echo $email;?>"
+                value="<?= htmlspecialchars($email, ENT_QUOTES, 'UTF-8') ?>"
                 required /> 
 
                 <input class="input" type="submit" value="Editar" name="SendEditUser">
